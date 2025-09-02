@@ -1,3 +1,17 @@
+// Theme Toggle
+const themeToggle = document.querySelector('.theme-toggle');
+const currentTheme = localStorage.getItem('theme') || 'light';
+
+document.documentElement.setAttribute('data-theme', currentTheme);
+
+themeToggle.addEventListener('click', () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
 // Mobile Menu Toggle
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
@@ -123,6 +137,79 @@ document.querySelectorAll('.feature').forEach((feature, index) => {
     feature.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
     observer.observe(feature);
 });
+
+// Typewriter Effect
+function typeWriter() {
+    const element = document.querySelector('.typewriter');
+    if (!element) return;
+    
+    const words = JSON.parse(element.dataset.words || '[]');
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let currentWord = '';
+    
+    function type() {
+        if (wordIndex >= words.length) wordIndex = 0;
+        
+        currentWord = words[wordIndex];
+        
+        if (isDeleting) {
+            element.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
+            
+            if (charIndex === 0) {
+                isDeleting = false;
+                wordIndex++;
+                setTimeout(type, 500);
+                return;
+            }
+        } else {
+            element.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
+            
+            if (charIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(type, 2000);
+                return;
+            }
+        }
+        
+        setTimeout(type, isDeleting ? 50 : 100);
+    }
+    
+    type();
+}
+
+typeWriter();
+
+// Particles Effect
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 4 + 1;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        const xPosition = Math.random() * 100;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${xPosition}%`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${delay}s`;
+        
+        particlesContainer.appendChild(particle);
+    }
+}
+
+createParticles();
 
 // Parallax effect for hero section
 const heroSection = document.querySelector('.hero');
@@ -273,5 +360,82 @@ window.addEventListener('load', () => {
     }
 });
 */
+
+// Testimonials Carousel
+let currentTestimonial = 0;
+const testimonials = document.querySelectorAll('.testimonial-card');
+const dots = document.querySelectorAll('.dot');
+
+function showTestimonial(index) {
+    testimonials.forEach((testimonial, i) => {
+        testimonial.classList.toggle('active', i === index);
+    });
+    
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+    
+    const track = document.querySelector('.testimonial-track');
+    if (track) {
+        track.style.transform = `translateX(-${index * 100}%)`;
+    }
+}
+
+if (dots.length > 0) {
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentTestimonial = index;
+            showTestimonial(currentTestimonial);
+        });
+    });
+    
+    // Auto-rotate testimonials
+    setInterval(() => {
+        currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+        showTestimonial(currentTestimonial);
+    }, 5000);
+}
+
+// Scroll to Top Button
+const scrollToTopBtn = document.querySelector('.scroll-to-top');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Process Timeline Animation
+const processSteps = document.querySelectorAll('.process-step');
+const processObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                const stepNumber = entry.target.querySelector('.step-number');
+                if (stepNumber) {
+                    stepNumber.style.animation = 'pulse 0.5s ease';
+                }
+            }, index * 150);
+        }
+    });
+}, { threshold: 0.5 });
+
+processSteps.forEach((step, index) => {
+    step.style.opacity = '0';
+    step.style.transform = 'translateY(30px)';
+    step.style.transition = `all 0.6s ease ${index * 0.1}s`;
+    processObserver.observe(step);
+});
 
 console.log('Autotapicería del Sur - Website loaded successfully');
