@@ -542,16 +542,10 @@
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
         
-        // Initialize n8n chat widget
+        // Initialize n8n chat widget with correct configuration
         createChat({
             webhookUrl: 'https://n8n.automationbeast.win/webhook/5f1c0c82-0ff9-40c7-9e2e-b1a96ffe24cd/chat',
             mode: 'window',
-            chatInputKey: 'chatInput',
-            chatSessionKey: 'sessionId',
-            metadata: {
-                source: 'website',
-                language: 'es'
-            },
             initialMessages: [
                 'Bienvenido a Autotapicería del Sur. ¿En qué puedo ayudarte hoy?'
             ],
@@ -567,10 +561,7 @@
             },
             defaultLanguage: 'es',
             showWelcomeScreen: false,
-            loadPreviousSession: true,
-            enableStreaming: true,
             allowFileUploads: false,
-            allowedFilesMimeTypes: '',
             theme: {
                 '--chat--color-primary': '#1a5490',
                 '--chat--color-primary-shade-50': '#0d3661',
