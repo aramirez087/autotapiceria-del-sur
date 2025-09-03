@@ -436,6 +436,40 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 20px;
 }
 
+/* Estilos para imágenes reales */
+.hero-image img,
+.portfolio-image img,
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease;
+}
+
+.hero-image img {
+    height: 400px;
+}
+
+.portfolio-image {
+    height: 250px;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+}
+
+.portfolio-image img {
+    border-radius: 0;
+}
+
+.portfolio-item:hover .portfolio-image img {
+    transform: scale(1.1);
+}
+
+.about-image img {
+    height: 500px;
+}
+
 /* Secciones */
 section {
     padding: 80px 0;
