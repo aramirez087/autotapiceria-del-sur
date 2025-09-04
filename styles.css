@@ -896,6 +896,10 @@ section {
 
 /* Form Loading and Message States */
 .btn-loading {
+    /* Hidden by default; shown when .visible is added by JS */
+    display: none;
+}
+.btn-loading.visible {
     display: inline-block;
     animation: pulse 1.5s ease-in-out infinite;
 }
