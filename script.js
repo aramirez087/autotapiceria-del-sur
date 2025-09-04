@@ -108,7 +108,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 const contactForm = document.querySelector('#n8n-contact-form');
 if (contactForm) {
     // Configuration - Replace with your actual n8n webhook URL
-    const N8N_WEBHOOK_URL = 'https://n8n.automationbeast.win/webhook/0ou5aHBSD0ptoF1k/contact-form';
+    const N8N_WEBHOOK_URL = 'https://n8n.automationbeast.win/webhook/contact-form';
     
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
