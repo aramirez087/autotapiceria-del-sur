@@ -32,6 +32,31 @@ menuToggle.addEventListener('click', () => {
     }
 });
 
+// Close menu when clicking outside or on theme toggle (mobile)
+document.addEventListener('click', function(e) {
+    if (navMenu.classList.contains('active')) {
+        // If click is outside navMenu and menuToggle and themeToggle
+        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target) && !themeToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        }
+    }
+});
+
+// Also close menu when clicking theme toggle (for mobile)
+themeToggle.addEventListener('click', () => {
+    if (navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
 // Close menu when clicking a link
 document.querySelectorAll('.nav-menu a').forEach(link => {
     link.addEventListener('click', () => {
@@ -79,11 +104,20 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Form submission handler
-const contactForm = document.querySelector('.contact-form');
+// Form submission handler with n8n webhook integration
+const contactForm = document.querySelector('#n8n-contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    // Configuration - Replace with your actual n8n webhook URL
+    const N8N_WEBHOOK_URL = 'https://n8n.automationbeast.win/webhook/0ou5aHBSD0ptoF1k/contact-form';
+    
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        // Get form elements
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        const formMessage = document.getElementById('form-message');
         
         // Get form data
         const formData = new FormData(contactForm);
@@ -92,12 +126,53 @@ if (contactForm) {
             data[key] = value;
         });
         
-        // Here you would normally send the data to a server
-        // For now, we'll just show an alert
-        alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
+        formMessage.style.display = 'none';
         
-        // Reset form
-        contactForm.reset();
+        try {
+            // Send data to n8n webhook
+            const response = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                // Success - show success message
+                formMessage.textContent = '¡Gracias por tu mensaje! Te contactaremos pronto.';
+                formMessage.className = 'form-message success';
+                formMessage.style.display = 'block';
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Scroll to message
+                formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
+            } else {
+                throw new Error('Error al enviar el formulario');
+            }
+        } catch (error) {
+            // Error - show error message
+            console.error('Error:', error);
+            formMessage.textContent = 'Hubo un error al enviar tu mensaje. Por favor, intenta nuevamente o contáctanos por teléfono.';
+            formMessage.className = 'form-message error';
+            formMessage.style.display = 'block';
+        } finally {
+            // Reset button state
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+        }
     });
 }
 

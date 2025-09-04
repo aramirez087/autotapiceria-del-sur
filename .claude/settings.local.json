@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\code\\autotapiceria-del-sur/**)",
+      "Bash(env)",
+      "Read(/C:\\code\\autotapiceria-del-sur/**)",
+      "Read(/C:\\code\\autotapiceria-del-sur/**)",
+      "Read(/C:\\code\\autotapiceria-del-sur/**)",
+      "Read(/C:\\code\\autotapiceria-del-sur/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
