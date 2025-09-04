@@ -50,6 +50,52 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Skip link for keyboard users */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.skip-link:focus {
+    left: 10px;
+    top: 10px;
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+    background: var(--bg-white);
+    color: var(--primary-color);
+    border-radius: 6px;
+    box-shadow: var(--shadow-md);
+    z-index: 2000;
+}
+
+/* Utility: visually hidden (for accessible labels) */
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+/* Form loading/message visibility controlled via classes */
+.btn-loading {
+    display: none;
+}
+.btn-loading.visible {
+    display: inline-block;
+}
+.form-message {
+    display: none;
+}
+.form-message.visible {
+    display: block;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
@@ -145,6 +191,18 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--text-dark);
     margin: 3px 0;
     transition: var(--transition);
+}
+
+/* Animated hamburger state controlled via .open class from JS */
+.menu-toggle.open span:nth-child(1) {
+    transform: rotate(45deg) translateY(8px);
+}
+.menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-6px);
+}
+.menu-toggle.open span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-8px);
 }
 
 /* Theme Toggle */
@@ -283,6 +341,36 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 2;
 }
 
+@media (max-width: 768px) {
+    .particles {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gradient-sphere,
+    .particle,
+    .hero-image,
+    .hero-title,
+    .hero-subtitle,
+    .hero-buttons {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .hero {
+        transform: none !important;
+    }
+}
+
+/* Focus styles for better keyboard visibility */
+a:focus,
+button:focus,
+.btn:focus {
+    outline: 3px solid rgba(255,107,53,0.25);
+    outline-offset: 3px;
+}
+
 .particle {
     position: absolute;
     background: rgba(255,255,255,0.8);
@@ -316,6 +404,23 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     position: relative;
     z-index: 10;
+}
+
+/* Ensure hero stacks vertically on small screens and image appears after text */
+@media (max-width: 768px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+
+    .hero-image {
+        order: 2; /* place image after text */
+    }
+
+    .hero-text {
+        order: 1;
+    }
 }
 
 .hero-title {
@@ -404,6 +509,16 @@ h1, h2, h3, h4, h5, h6 {
     animation: fadeInRight 1s ease;
 }
 
+/* Hero image utility: keep tall card ratio and control focal point */
+.hero-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 5;
+    object-fit: cover;
+    object-position: center right;
+    border-radius: 10px;
+}
+
 /* Image Placeholder */
 .image-placeholder {
     background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
@@ -437,7 +552,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Estilos para imágenes reales */
-.hero-image img,
 .portfolio-image img,
 .about-image img {
     width: 100%;
@@ -448,8 +562,15 @@ h1, h2, h3, h4, h5, h6 {
     transition: transform 0.3s ease;
 }
 
+/* Hero image: allow proportional scaling on narrow viewports instead of a fixed height */
 .hero-image img {
-    height: 400px;
+    width: 100%;
+    height: auto; /* let the image keep its aspect ratio */
+    max-height: 500px; /* cap height on large screens */
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease;
 }
 
 .portfolio-image {
@@ -1207,6 +1328,22 @@ section {
     
     .hero {
         padding: 60px 20px;
+    }
+
+    /* On small screens, center the hero image and let its height flow so the pictured place is visible */
+    .hero-img {
+        object-position: center center !important;
+        aspect-ratio: auto !important;
+        max-height: none !important;
+    }
+
+    .hero-image img {
+        max-height: none !important;
+    }
+
+    /* Let hero size to its content on small screens instead of forcing a large min-height */
+    .hero {
+        min-height: 0;
     }
     
     .hero-title {

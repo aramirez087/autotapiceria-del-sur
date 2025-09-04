@@ -1,0 +1,11 @@
+{
+  "name": "autotapiceria-del-sur",
+  "version": "1.0.0",
+  "description": "Website assets and tooling",
+  "scripts": {
+    "generate-images": "node scripts/resize-images.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.32.0"
+  }
+}

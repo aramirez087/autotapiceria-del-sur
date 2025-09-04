@@ -17,20 +17,13 @@ const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
 menuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    
-    // Animate hamburger menu
-    const spans = menuToggle.querySelectorAll('span');
-    if (navMenu.classList.contains('active')) {
-        spans[0].style.transform = 'rotate(45deg) translateY(8px)';
-        spans[1].style.opacity = '0';
-        spans[2].style.transform = 'rotate(-45deg) translateY(-8px)';
-    } else {
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
-    }
-});
+        const isOpen = navMenu.classList.toggle('active');
+        // Update aria-expanded for accessibility
+        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+        // Toggle visual class for hamburger animation
+        menuToggle.classList.toggle('open', isOpen);
+    });
 
 // Close menu when clicking outside or on theme toggle (mobile)
 document.addEventListener('click', function(e) {
@@ -38,10 +31,8 @@ document.addEventListener('click', function(e) {
         // If click is outside navMenu and menuToggle and themeToggle
         if (!navMenu.contains(e.target) && !menuToggle.contains(e.target) && !themeToggle.contains(e.target)) {
             navMenu.classList.remove('active');
-            const spans = menuToggle.querySelectorAll('span');
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+                menuToggle.classList.remove('open');
+                menuToggle.setAttribute('aria-expanded', 'false');
         }
     }
 });
@@ -50,10 +41,8 @@ document.addEventListener('click', function(e) {
 themeToggle.addEventListener('click', () => {
     if (navMenu.classList.contains('active')) {
         navMenu.classList.remove('active');
-        const spans = menuToggle.querySelectorAll('span');
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
+        menuToggle.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
     }
 });
 
@@ -61,10 +50,8 @@ themeToggle.addEventListener('click', () => {
 document.querySelectorAll('.nav-menu a').forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('active');
-        const spans = menuToggle.querySelectorAll('span');
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
+        menuToggle.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
     });
 });
 
@@ -128,9 +115,10 @@ if (contactForm) {
         
         // Show loading state
         submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
         btnText.style.display = 'none';
-        btnLoading.style.display = 'inline';
-        formMessage.style.display = 'none';
+        btnLoading.classList.add('visible');
+        formMessage.classList.remove('visible');
         
         try {
             // Send data to n8n webhook
@@ -145,8 +133,8 @@ if (contactForm) {
             if (response.ok) {
                 // Success - show success message
                 formMessage.textContent = '¡Gracias por tu mensaje! Te contactaremos pronto.';
-                formMessage.className = 'form-message success';
-                formMessage.style.display = 'block';
+                formMessage.classList.remove('error');
+                formMessage.classList.add('form-message', 'success', 'visible');
                 
                 // Reset form
                 contactForm.reset();
@@ -156,7 +144,7 @@ if (contactForm) {
                 
                 // Hide message after 5 seconds
                 setTimeout(() => {
-                    formMessage.style.display = 'none';
+                    formMessage.classList.remove('visible');
                 }, 5000);
             } else {
                 throw new Error('Error al enviar el formulario');
@@ -165,13 +153,14 @@ if (contactForm) {
             // Error - show error message
             console.error('Error:', error);
             formMessage.textContent = 'Hubo un error al enviar tu mensaje. Por favor, intenta nuevamente o contáctanos por teléfono.';
-            formMessage.className = 'form-message error';
-            formMessage.style.display = 'block';
+                formMessage.classList.remove('success');
+                formMessage.classList.add('form-message', 'error', 'visible');
         } finally {
             // Reset button state
             submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
             btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
+            btnLoading.classList.remove('visible');
         }
     });
 }
@@ -262,7 +251,13 @@ typeWriter();
 function createParticles() {
     const particlesContainer = document.getElementById('particles');
     if (!particlesContainer) return;
-    
+    // Respect prefers-reduced-motion
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    // Disable on small screens to save resources
+    if (window.innerWidth <= 768) return;
+
     const particleCount = 30;
     
     for (let i = 0; i < particleCount; i++) {

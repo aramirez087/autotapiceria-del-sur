@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <a class="skip-link" href="#inicio">Saltar al contenido</a>
     <!-- Header y Navegación -->
     <header class="header">
         <nav class="navbar">
@@ -20,7 +21,7 @@
                         <h1>Autotapicería del Sur</h1>
                         <span class="logo-subtitle">Expertos en Tapicería Automotriz</span>
                     </div>
-                    <button class="menu-toggle" aria-label="Abrir menú">
+                    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -68,7 +69,19 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="images/hero.png" alt="Autotapicería del Sur - Expertos en tapicería automotriz">
+                <!-- Responsive picture: add real resized images and a WebP at the paths below for best results -->
+                <picture>
+                    <!-- Mobile first: smaller image for narrow viewports -->
+                    <source media="(max-width: 768px)" type="image/webp" srcset="images/hero-400.webp 400w" sizes="90vw">
+                    <source media="(max-width: 768px)" type="image/png" srcset="images/hero-400.png 400w" sizes="90vw">
+
+                    <!-- Larger devices: choose the appropriate size -->
+                    <source type="image/webp" srcset="images/hero-800.webp 800w, images/hero-1200.webp 1200w" sizes="(max-width: 1200px) 45vw, 600px">
+                    <source type="image/png" srcset="images/hero-800.png 800w, images/hero-1200.png 1200w" sizes="(max-width: 1200px) 45vw, 600px">
+
+                    <!-- Fallback: existing image -->
+                    <img class="hero-img" src="images/hero.png" alt="Autotapicería del Sur - Expertos en tapicería automotriz" loading="lazy" decoding="async">
+                </picture>
             </div>
         </div>
     </section>
@@ -153,7 +166,7 @@
             </div>
             <div class="testimonials-carousel">
                 <div class="testimonial-track">
-                    <div class="testimonial-card active">
+                    <div class="testimonial-card active" id="testimonial-0" role="tabpanel" aria-labelledby="tab-0">
                         <div class="stars">
                             <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
                         </div>
@@ -166,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-card">
+                    <div class="testimonial-card" id="testimonial-1" role="tabpanel" aria-labelledby="tab-1">
                         <div class="stars">
                             <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
                         </div>
@@ -179,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-card">
+                    <div class="testimonial-card" id="testimonial-2" role="tabpanel" aria-labelledby="tab-2">
                         <div class="stars">
                             <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
                         </div>
@@ -193,10 +206,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-dots">
-                    <button class="dot active" data-slide="0"></button>
-                    <button class="dot" data-slide="1"></button>
-                    <button class="dot" data-slide="2"></button>
+                <div class="testimonial-dots" role="tablist" aria-label="Testimonios">
+                    <button id="tab-0" class="dot active" data-slide="0" role="tab" aria-selected="true" aria-controls="testimonial-0"> <span class="visually-hidden">Mostrar testimonio 1</span></button>
+                    <button id="tab-1" class="dot" data-slide="1" role="tab" aria-selected="false" aria-controls="testimonial-1"> <span class="visually-hidden">Mostrar testimonio 2</span></button>
+                    <button id="tab-2" class="dot" data-slide="2" role="tab" aria-selected="false" aria-controls="testimonial-2"> <span class="visually-hidden">Mostrar testimonio 3</span></button>
                 </div>
             </div>
         </div>
@@ -448,7 +461,7 @@
                         <input type="text" name="vehicle" placeholder="Marca y modelo del vehículo">
                     </div>
                     <div class="form-group">
-                        <select name="service" required>
+                            <select name="service" required aria-label="Seleccione un servicio">
                             <option value="">Seleccione un servicio</option>
                             <option value="asientos">Asientos y Butacas</option>
                             <option value="paneles">Paneles de Puertas</option>
@@ -464,9 +477,9 @@
                     </div>
                     <button type="submit" class="btn btn-primary" id="submit-btn">
                         <span class="btn-text">Enviar Consulta</span>
-                        <span class="btn-loading" style="display: none;">Enviando...</span>
+                        <span class="btn-loading">Enviando...</span>
                     </button>
-                    <div class="form-message" id="form-message" style="display: none;"></div>
+                    <div class="form-message" id="form-message"></div>
                 </form>
             </div>
         </div>
